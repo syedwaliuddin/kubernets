@@ -1,0 +1,356 @@
+    1  apt update && apt upgrade -y && apt dist-upgrade -y
+    2  apt install -y apt-transport-https ca-certificates curl software-properties-common gnupg2 net-tools
+    3  hostnamectl set-hostname $(curl -s http://169.254.169.254/latest/meta-data/local-hostname)
+    4  apt install -y docker.io
+    5  cat << EOF > /etc/docker/daemon.json
+    6  {
+    7    "exec-opts": ["native.cgroupdriver=systemd"],
+    8    "log-driver": "json-file",
+    9    "log-opts": {
+   10      "max-size": "100m"
+   11    },
+   12    "storage-driver": "overlay2"
+   13  }
+   14  EOF
+   15  systemctl stop docker
+   16  systemctl start docker
+   17  systemctl enable docker
+   18  cat <<EOF > /etc/sysctl.d/k8s.conf
+   19  net.bridge.bridge-nf-call-ip6tables = 1
+   20  net.bridge.bridge-nf-call-iptables = 1
+   21  net.ipv4.ip_forward = 1
+   22  EOF
+   23  sysctl --system
+   24  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
+   25  apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+   26  apt update
+   27  apt install kubelet="1.22.17-00" 
+   28  apt install kubeadm="1.22.17-00"
+   29  apt install kubectl="1.22.17-00"
+   30  cat << EOF > /etc/kubernetes/aws.yaml
+   31  ---
+   32  apiVersion: kubeadm.k8s.io/v1beta3
+   33  kind: ClusterConfiguration
+   34  kubernetesVersion: v1.22.17
+   35  networking:
+   36    serviceSubnet: "10.100.0.0/16"
+   37    podSubnet: "10.244.0.0/16"
+   38  apiServer:
+   39    extraArgs:
+   40      cloud-provider: "aws"
+   41  controllerManager:
+   42    extraArgs:
+   43      cloud-provider: "aws"
+   44  EOF
+   45  kubeadm init --config /etc/kubernetes/aws.yaml
+   46  mkdir -p $HOME/.kube
+   47  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   48  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   49  kubectl apply -f https://docs.projectcalico.org/manifests/calico-typha.yaml
+   50  kubectl get nodes
+   51  kubeadm token generate
+   52  kubeadm token list
+   53  kubeadm token create
+   54  kubeadm token create --print-join-command
+   55  kubeadm --print-join-command
+   56  kubeadm token generate --print-join-command
+   57  kubeadm token create --print-join-command
+   58  ls
+   59  kubectl get node
+   60  kubeadm token create --print-join-command
+   61  kubectl get node
+   62  cd /etc/kubernetes/
+   63  ls
+   64  cat aws.yaml 
+   65  cat kubelet.conf 
+   66  ls
+   67  cat admin.conf 
+   68  ls
+   69  cat controller-manager.conf 
+   70  cd
+   71  kubectl get node
+   72  l
+   73  ls
+   74  vi pod.yml 
+   75  rm -rf *
+   76  git init
+   77  ls
+   78  vi file1
+   79  ls
+   80  vi file1 
+   81  git add file1 
+   82  git commit -m "1st"
+   83  git remote add wali https://github.com/syedwaliuddin/role_tomcat_book.git
+   84  git remote -v
+   85  git status
+   86  git log
+   87  git push origin master
+   88  git push wali master
+   89  git show 
+   90  vi file1 
+   91  git status
+   92  git add file1 
+   93  git commit -m "2nd"
+   94  git log
+   95  git show 975276d6aa1
+   96  git revert 
+   97  git show  3f34faf7ff3277f
+   98  git show 975276d6aa178f
+   99  git show 975276d6aa178
+  100  git log
+  101  git log --oneline
+  102  git revert 3f34faf
+  103  git log --oneline
+  104  git show e582b1f
+  105  vi file1 
+  106  git add file1 
+  107  git commit -m "3rd"
+  108  git push wali master
+  109  git branch
+  110  git checkout -b new
+  111  vi file1 
+  112  git switch master
+  113  git merge new
+  114  git merge branch new
+  115  git branch merge new
+  116  git branch
+  117  git branch -d merge 
+  118  git branch
+  119  git switch
+  120  git switch new
+  121  git merge master
+  122  git push wali master
+  123  git fetch
+  124  git fetch master
+  125  git fetch 'https://github.com/syedwaliuddin/role_tomcat_book.git
+  126  git fetch https://github.com/syedwaliuddin/role_tomcat_book.git
+  127  git log
+  128  git show d1a31f89dd780250d7
+  129  git d1a31f89dd7802
+  130  git status
+  131  git commit -m "4th"
+  132  git add file1 
+  133  git status
+  134  git commit -m "4th"
+  135  git push wali master 
+  136  git pull https://github.com/syedwaliuddin/role_tomcat_book.git
+  137  git pull wali master
+  138  git pull origin master
+  139  git remote -v
+  140  git config --global user.name syed
+  141  git config --global user.email syed@gmail.com
+  142  git pull wali master
+  143  ls
+  144  vi file1 
+  145  git log
+  146  history 
+  147  kubectl get nodes
+  148  kubectl get pods
+  149  kubectl delete pods --all
+  150  kubectl get pods
+  151  ls
+  152  kubectl get pods
+  153  kubectl delete pod tomcat-hgwrp
+  154  kubectl get pods
+  155  kubectl delete pod tomcat-hgwrp -f
+  156  kubectl delete pod -f tomcat-hgwrp 
+  157  kubectl delete pods
+  158  kubectl delete -f pods --all 
+  159  kubectl delete pods --all 
+  160  kubectl get pods
+  161  cd /etc/kubernetes/
+  162  ls
+  163  vi controller-manager.conf 
+  164  vi manifests/
+  165  cd manifests/
+  166  ls
+  167  cat etcd.yaml 
+  168  cd
+  169  vi pod.yml
+  170  kubectl get pods --show-labels
+  171  kubectl scale pods replicas=1 -l app=tomcat
+  172  kubectl scale pods replica=1 -l app=tomcat
+  173  kubectl scale pods replicaset=1 -l app=tomcat
+  174  kubectl scale pods replicas=1 -l app=tomcat
+  175  kubectl delete pods --all
+  176  kubectl get rs
+  177  kubectl scale pods tomcat-replica replicas=1 -l app=tomcat
+  178  kubectl scale pods tomcat-replica replicas=1
+  179  kubectl scale pods tomcat-replica 
+  180  ls
+  181  vi pod.yml
+  182  kubectl create pod.yml 
+  183  kubectl create -f pod.yml 
+  184  vi pod.yml
+  185  kubectl create -f pod.yml 
+  186  vi pod.yml
+  187  kubectl apply -f pod.yml 
+  188  kubectl get pods -A
+  189  cd /etc/kubernetes/
+  190  ls
+  191  cd pki
+  192  ls
+  193  cat apiserver-kubelet-client.crt 
+  194  cd
+  195  vi pod.yml 
+  196  kubectl apply -f pod.yml 
+  197  vi pod.yml 
+  198  kubectl apply -f pod.yml 
+  199  vi pod.yml 
+  200  kubectl apply -f pod.yml 
+  201  kubectl get pods
+  202  kubectl get pods --show-labels
+  203  kubectl get ip
+  204  kubectl get pod ip
+  205  vi pod.yml 
+  206  kubectl apply -f pod.yml 
+  207  kubectl get pod 
+  208  kubectl get pods --show-labels
+  209  kubectl get pods --show-label
+  210  kubectl get pods --show-labels
+  211  kubectl describe pod
+  212  kubectl get pod -o wide
+  213  kubectl describe pod
+  214  vi service.yml
+  215  kubectl apply -f service.yml 
+  216  vi service.yml
+  217  kubectl apply -f service.yml 
+  218  vi service.yml
+  219  kubectl apply -f service.yml 
+  220  vi service.yml
+  221  kubectl apply -f service.yml 
+  222  vi service.yml
+  223  kubectl get pod -o wide
+  224  kubectl get service -o wide
+  225  vi devnamespace.yml
+  226  kubectl apply -f devnamespace.yml 
+  227  kubectl get namespace
+  228  kubectl get pods
+  229  kubectl get pods -n dev-namespace-env
+  230  kubectl apply -f pod.yml --namespace=dev-namespace-env
+  231  kubectl get namespace
+  232  kubectl get pods
+  233  kubectl get pods -n dev-namespace-env
+  234  vi pod.yml 
+  235  kubectl apply -f pod.yml 
+  236  vi pod.yml 
+  237  ls
+  238  vi deploy.yml
+  239  cat devnamespace.yml 
+  240  kubectl get namespace
+  241  kubectl delete namespace dev-namespace-env
+  242  kubectl get pods
+  243  kubectl delete pods --all
+  244  kubectl get pods
+  245  kubectl get svc
+  246  kubectl get rc
+  247  kubectl get replicaset
+  248  kubectl delete replicaset tomcat-replica
+  249  kubectl get replicaset
+  250  kubectl get pod
+  251  kubectl get pods
+  252  kubectl get nodeport
+  253  kubectl apply -f deploy.yml 
+  254  kubectl apply -f devnamespace.yml 
+  255  kubectl apply -f deploy.yml 
+  256  kubectl get namespace
+  257  vi deploy.yml 
+  258  kubectl apply -f deploy.yml 
+  259  kubectl get pods
+  260  kubectl get pod dev-namespace-env
+  261  kubectl get pod namespace dev-namespace-env
+  262  kubectl get pod namespace
+  263  kubectl get namespace
+  264  kubectl get dev-namespace-env 
+  265  kubectl get dev-namespace-env pod
+  266  kubectl get pods namespace=dev-namespace-env 
+  267  kubectl get pod namespace=dev-namespace-env 
+  268  kubectl get pods --all
+  269  kubectl get pods
+  270  kubectl get pods namespace=dev-namespace-env 
+  271  kubectl describe namespace
+  272  kubectl describe namespace dev-namespace-env
+  273  kubectl get pods
+  274  kubectl get pods -A
+  275  kubectl get pods
+  276  kubectl get pods -n dev-namespace-env
+  277  kubectl delete deployment tomcat-nginx-deploymen
+  278  kubectl get pod -o wide
+  279  kubectl get pod -n dev-namespace-env -o wide
+  280  curl -v 10.244.117.223:80
+  281  curl -v 10.244.117.223:8080
+  282  kubectl get pods svc -o wide
+  283  kubectl get pod svc 
+  284  kubectl get pod svc app=tomcat
+  285  kubectl get svc
+  286  kubectl get pod svc tomcat-ngnix
+  287  kubectl get pod svc tomcat-ngnix -o wide
+  288  curl -v 10.100.119.184:80
+  289  curl -v 10.100.119.184:8080
+  290  curl -v 10.100.119.184:443
+  291  vi newpod.yml
+  292  kubectl apply -f newpod.yml 
+  293  kubectl get pod
+  294  kubectl get pod -n namespcae=dev-namespace-env
+  295  kubectl get pod -n dev-namespace-env
+  296  kubectl delete pod -n dev-nmaespace-env
+  297  kubectl delete pods -n dev-nmaespace-env
+  298  kubectl delete pods -n dev-namespace-env
+  299  kubectl delete pod -n dev-namespace-env
+  300  kubectl delete pod
+  301  kubectl delete pod -n dev-namespace-env --all
+  302  kubectl get pod -n dev-namespace-env
+  303  vi podlimits.yml
+  304  kubctl apply -f podlimits.yml 
+  305  kubectl apply -f podlimits.yml 
+  306  kubectl get resourcequota
+  307  kubectl get svc resourcequota
+  308  kubectl get rc
+  309  kubectl get svc resourceqouta
+  310  kubectl get resourceqouta
+  311  kubectl get resourcequota -n dev-namespace-env
+  312  kubectl get pods resourcequota -n dev-namespace-env
+  313  kubectl describe podquota
+  314  kubectl describe resourcequota
+  315  kubectl describe resourcequota -n dev-namespace-env
+  316  vi resourcequota.yml
+  317  kubectl apply -f resourcequota.yml 
+  318  kubectl get resourcequota -n dev-namespace-env
+  319  vi limitrange.yml
+  320  kubectl apply -f limitrange.yml 
+  321  kubectl get limitrange -n dev-namespace-env
+  322  kubectl get limitrange memory-limit-range -n dev-namespace-env
+  323  kubectl get pods limitrange -n dev-namespace-env
+  324  kubectl get pods limitrange memory-limit-range -n dev-namespace-env
+  325  kubectl get pod limitrange memory-limit-range -n dev-namespace-env
+  326  kubectl get pod limitrange -n dev-nameaspace-env
+  327  kubectl get pods -n dev-nameaspace-env
+  328  kubectl get pod -n dev-nameaspace-env
+  329  kubectl get pods
+  330  kubectl get namesapce
+  331  kubectl get namespace
+  332  kubectl get pod -n dev-namespace-env
+  333  kubectl get namespace
+  334  kubectl get resourcequota
+  335  kubectl get resourcequota -n dev-namespace-env
+  336  kubectl get namespace
+  337  kubectl get pod -n dev-namespace-env
+  338  kubectl get resourcequota
+  339  kubectl get namespace
+  340  kubectl get pod -n dev-namespace-env
+  341  kubectl get resourcequota -n dev-namespace-env
+  342  kubectl get limitrange -n dev-namespace-env
+  343  ls
+  344  echo "Today assignment"
+  345  history 
+  346  kubectl get pods --show-label
+  347  kubectl get pods --show-labels
+  348  kubectl get pods -n dev-namespace-env --show-labels
+  349  kubectl label pods -n dev-namespace-env my=tomcat
+  350  kubectl get pods -n dev-namespace-env
+  351  kubectl label pods tomcat-nginx-deployment-666bc57f8f-cgffd -n dev-namespace-env my=tomcat
+  352  kubectl get pod -n dev-namespace-env my=tomcat
+  353  kubectl get pod -n dev-namespace-env -l my=tomcat
+  354  echo pass the particular label to running pod
+  355  history
+  356  history > todayextracommands

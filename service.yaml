@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: tomcat-ngnix
+spec:
+  selector:
+    app: tomcat-nginx-pd
+  type: ClusterIP
+  ports:
+    - name: tomcat
+      protocol: TCP
+      targetPort: 8080
+      port: 8080
+    - name: nginx
+      protocol: TCP
+      targetPort: 80
+      port: 80   

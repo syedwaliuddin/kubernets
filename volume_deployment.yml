@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: dev-ns
+spec:
+  replicas: 2
+  selector:
+   matchLabels:
+     app: jenkins
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      name: jenkins
+      labels:
+        app: jenkins
+    spec:
+      volumes:
+      - name: "jenkins-data"
+        hostPath:
+          path: "/root/jenkins"
+      nodeSelector:
+        size: large
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:lts
+        volumeMounts:
+        - mountPath: "/var/jenkins_home"
+          name: "jenkins-data"

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-nginx-deployment  
+  namespace: dev-namespace-env
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tomcat-nginx-pd
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 2
+  template:
+    metadata:
+      name: tomcat-nginx
+      labels:
+        app: tomcat-nginx-pd
+    spec:
+      containers:
+        - name: apache-tomcat
+          image: krishna123456/tomcat:1.11.111
+          resources:
+            limits:
+              cpu: "1"
+              memory: 256Mi
+            requests:
+              cpu: 500m
+              memory: 128Mi
+

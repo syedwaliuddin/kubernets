@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemonset-tomcat
+spec:
+  selector:
+    matchLabels:
+      app: tomcat
+  template:
+    metadata:
+      labels:
+        app: tomcat 
+    spec:
+      containers:
+      - name: tomcat
+        image: tomcat:9.0
+      - name: ng
+        image: nginx:1.14.2
+     

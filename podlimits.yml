@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: podquota
+  namespace: dev-namespace-env
+spec:
+  hard:
+    pods: "2"

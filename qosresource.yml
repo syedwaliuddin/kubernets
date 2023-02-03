@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tomcat-nginxl
+  labels: 
+    app: tomcat
+spec:
+  containers:
+  - name: mytomcat
+    image: prajwal1327/mytomcat:1.1.6
+    resources:
+      limits: 
+        cpu: "400m"
+        memory: "250Mi"
+      requests: 
+        memory: "200Mi"
+        cpu: "350m" 
+

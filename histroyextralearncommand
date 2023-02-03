@@ -1,0 +1,10 @@
+  346  kubectl get pods --show-label
+  347  kubectl get pods --show-labels
+  348  kubectl get pods -n dev-namespace-env --show-labels
+  349  kubectl label pods -n dev-namespace-env my=tomcat
+  350  kubectl get pods -n dev-namespace-env
+  351  kubectl label pods tomcat-nginx-deployment-666bc57f8f-cgffd -n dev-namespace-env my=tomcat
+  352  kubectl get pod -n dev-namespace-env my=tomcat
+  353  kubectl get pod -n dev-namespace-env -l my=tomcat
+  354  echo pass the particular label to running pod
+  355  history

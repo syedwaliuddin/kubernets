@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcatdeployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tomcat
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      name: tomcat-nginix
+      labels:
+        app: tomcat
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:    
+            -  matchExpressions:
+               - key: size
+                 operator: In
+                 values:
+                   - extrasmall       
+      containers:
+       - name: tomcat
+         image: waliuddin/mytom:1.0.0
+

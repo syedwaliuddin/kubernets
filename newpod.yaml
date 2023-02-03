@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tomcat-nginx1
+  labels:
+    app: tomcat
+spec:
+  containers:
+    - name: apache-tomcat
+      image: krishna123456/tomcat:1.11.111
+    - name: nginx
+      image: nginx:1.14.2
+
